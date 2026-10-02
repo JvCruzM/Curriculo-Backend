@@ -1,0 +1,762 @@
+{
+  "info": {
+    "_postman_id": "9d9ddc39-28cc-4cf2-bd4f-b2e0f8fd2ec5",
+    "name": "Currículo Backend API",
+    "description": "Collection para testar a API REST de currículo. Use a variável baseUrl para alternar entre ambiente local e Vercel.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "profileId",
+      "value": ""
+    },
+    {
+      "key": "academicExperienceId",
+      "value": ""
+    },
+    {
+      "key": "professionalExperienceId",
+      "value": ""
+    },
+    {
+      "key": "projectId",
+      "value": ""
+    },
+    {
+      "key": "technologyId",
+      "value": ""
+    },
+    {
+      "key": "unassignedTechnologyId",
+      "value": ""
+    },
+    {
+      "key": "usedTechnologyId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/"
+          }
+        },
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Health check retorna 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.status).to.eql('ok');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Profiles",
+      "item": [
+        {
+          "name": "GET /profiles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/profiles"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Lista de perfis retorna 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data).to.be.an('array');",
+                  "pm.expect(data.length).to.be.at.least(2);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /profiles/:profileId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/profiles/{{profileId}}"
+          }
+        },
+        {
+          "name": "GET /profiles/:profileId/full",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/profiles/{{profileId}}/full"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Currículo completo retorna 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data).to.have.property('academicExperiences');",
+                  "pm.expect(data).to.have.property('professionalExperiences');",
+                  "pm.expect(data).to.have.property('projects');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /profiles",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Perfil de Teste\",\n  \"email\": \"perfil.teste.curriculo@example.com\",\n  \"phone\": \"(81) 90000-0000\",\n  \"location\": \"Recife-PE\",\n  \"summary\": \"Perfil criado exclusivamente para testes da API.\",\n  \"photoUrl\": \"https://i.pravatar.cc/300?img=20\",\n  \"githubUrl\": \"https://github.com/\",\n  \"linkedinUrl\": \"https://www.linkedin.com/\"\n}"
+            },
+            "url": "{{baseUrl}}/profiles"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Perfil criado com 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.exist;",
+                  "pm.collectionVariables.set('profileId', data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /profiles/:profileId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Perfil de Teste Atualizado\",\n  \"email\": \"perfil.teste.curriculo@example.com\",\n  \"phone\": \"(81) 91111-1111\",\n  \"location\": \"Recife-PE\",\n  \"summary\": \"Perfil atualizado através da API.\",\n  \"githubUrl\": \"https://github.com/\",\n  \"linkedinUrl\": \"https://www.linkedin.com/\"\n}"
+            },
+            "url": "{{baseUrl}}/profiles/{{profileId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic Experiences",
+      "item": [
+        {
+          "name": "GET /academic-experiences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/academic-experiences"
+          }
+        },
+        {
+          "name": "GET /academic-experiences/:academicExperienceId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/academic-experiences/{{academicExperienceId}}"
+          }
+        },
+        {
+          "name": "POST /academic-experiences",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"{{profileId}}\",\n  \"institution\": \"Faculdade de Testes\",\n  \"course\": \"Engenharia de Software\",\n  \"degree\": \"Especialização\",\n  \"startDate\": \"2026-10-01\",\n  \"endDate\": null,\n  \"description\": \"Experiência criada exclusivamente para testar o CRUD.\"\n}"
+            },
+            "url": "{{baseUrl}}/academic-experiences"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Experiência acadêmica criada com 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.exist;",
+                  "pm.collectionVariables.set('academicExperienceId', data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /academic-experiences/:academicExperienceId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"{{profileId}}\",\n  \"institution\": \"Faculdade de Testes Atualizada\",\n  \"course\": \"Engenharia de Software\",\n  \"degree\": \"Especialização\",\n  \"startDate\": \"2026-10-01\",\n  \"endDate\": null,\n  \"description\": \"Experiência acadêmica atualizada através da API.\"\n}"
+            },
+            "url": "{{baseUrl}}/academic-experiences/{{academicExperienceId}}"
+          }
+        },
+        {
+          "name": "DELETE /academic-experiences/:academicExperienceId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/academic-experiences/{{academicExperienceId}}",
+            "description": "Execute apenas com o registro criado pelo POST desta pasta."
+          }
+        },
+        {
+          "name": "POST invalid profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"00000000-0000-0000-0000-000000000000\",\n  \"institution\": \"Teste\",\n  \"course\": \"Teste\",\n  \"degree\": \"Técnico\",\n  \"startDate\": \"2026-10-01\",\n  \"endDate\": null,\n  \"description\": \"Deve falhar por relacionamento inexistente.\"\n}"
+            },
+            "url": "{{baseUrl}}/academic-experiences"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Profile inexistente retorna 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Professional Experiences",
+      "item": [
+        {
+          "name": "GET /professional-experiences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/professional-experiences"
+          }
+        },
+        {
+          "name": "GET /professional-experiences/:professionalExperienceId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/professional-experiences/{{professionalExperienceId}}"
+          }
+        },
+        {
+          "name": "POST /professional-experiences",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"{{profileId}}\",\n  \"company\": \"Empresa de Teste\",\n  \"position\": \"Desenvolvedor Estagiário\",\n  \"startDate\": \"2026-10-01\",\n  \"endDate\": null,\n  \"description\": \"Experiência criada exclusivamente para testar o CRUD.\"\n}"
+            },
+            "url": "{{baseUrl}}/professional-experiences"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Experiência profissional criada com 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.exist;",
+                  "pm.collectionVariables.set('professionalExperienceId', data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /professional-experiences/:professionalExperienceId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"{{profileId}}\",\n  \"company\": \"Empresa de Teste Atualizada\",\n  \"position\": \"Desenvolvedor Júnior\",\n  \"startDate\": \"2026-10-01\",\n  \"endDate\": null,\n  \"description\": \"Experiência profissional atualizada através da API.\"\n}"
+            },
+            "url": "{{baseUrl}}/professional-experiences/{{professionalExperienceId}}"
+          }
+        },
+        {
+          "name": "DELETE /professional-experiences/:professionalExperienceId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/professional-experiences/{{professionalExperienceId}}",
+            "description": "Execute apenas com o registro criado pelo POST desta pasta."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "GET /projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/projects"
+          }
+        },
+        {
+          "name": "GET /projects/:projectId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "GET /projects/:projectId/technologies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/projects/{{projectId}}/technologies"
+          }
+        },
+        {
+          "name": "POST /projects",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"{{profileId}}\",\n  \"name\": \"Projeto de Teste\",\n  \"description\": \"Projeto criado exclusivamente para testar o CRUD e os relacionamentos.\",\n  \"githubUrl\": \"https://github.com/teste/projeto\",\n  \"projectUrl\": \"https://example.com/projeto\",\n  \"startDate\": \"2026-10-01\",\n  \"endDate\": null\n}"
+            },
+            "url": "{{baseUrl}}/projects"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Projeto criado com 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.exist;",
+                  "pm.collectionVariables.set('projectId', data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /projects/:projectId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"{{profileId}}\",\n  \"name\": \"Projeto de Teste Atualizado\",\n  \"description\": \"Projeto atualizado através da API.\",\n  \"githubUrl\": \"https://github.com/teste/projeto-atualizado\",\n  \"projectUrl\": \"https://example.com/projeto\",\n  \"startDate\": \"2026-10-01\",\n  \"endDate\": null\n}"
+            },
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "POST /projects/:projectId/technologies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"technologyId\": \"{{technologyId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/projects/{{projectId}}/technologies"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Tecnologia associada com 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST duplicate project technology",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"technologyId\": \"{{technologyId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/projects/{{projectId}}/technologies"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Relacionamento duplicado retorna 409', function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE /projects/:projectId/technologies/:technologyId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/projects/{{projectId}}/technologies/{{technologyId}}"
+          }
+        },
+        {
+          "name": "DELETE /projects/:projectId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/projects/{{projectId}}",
+            "description": "Execute por último e somente com o projeto de teste criado pelo POST."
+          }
+        },
+        {
+          "name": "POST invalid profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileId\": \"00000000-0000-0000-0000-000000000000\",\n  \"name\": \"Projeto inválido\"\n}"
+            },
+            "url": "{{baseUrl}}/projects"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Profile inexistente retorna 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Technologies",
+      "item": [
+        {
+          "name": "GET /technologies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/technologies"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Lista de tecnologias retorna 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data).to.be.an('array');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /technologies/:technologyId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/technologies/{{technologyId}}"
+          }
+        },
+        {
+          "name": "POST /technologies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tecnologia de Teste\",\n  \"category\": \"Testing\"\n}"
+            },
+            "url": "{{baseUrl}}/technologies"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Tecnologia criada com 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const data = pm.response.json();",
+                  "pm.expect(data.id).to.exist;",
+                  "pm.collectionVariables.set('unassignedTechnologyId', data.id);",
+                  "pm.collectionVariables.set('technologyId', data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT /technologies/:technologyId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tecnologia de Teste Atualizada\",\n  \"category\": \"Testing\"\n}"
+            },
+            "url": "{{baseUrl}}/technologies/{{technologyId}}"
+          }
+        },
+        {
+          "name": "POST duplicate technology",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"React\",\n  \"category\": \"Frontend\"\n}"
+            },
+            "url": "{{baseUrl}}/technologies"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Tecnologia duplicada retorna 409', function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE /technologies/:technologyId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/technologies/{{technologyId}}",
+            "description": "Execute somente se technologyId apontar para uma tecnologia sem projetos associados."
+          }
+        },
+        {
+          "name": "DELETE used technology",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/technologies/{{usedTechnologyId}}",
+            "description": "Cenário de demonstração de regra de negócio. Configure manualmente usedTechnologyId com uma tecnologia usada por um projeto, como React. Espera 409."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Validation Scenarios",
+      "item": [
+        {
+          "name": "GET invalid UUID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/profiles/123"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('UUID inválido retorna 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE nonexistent technology relation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/projects/{{projectId}}/technologies/{{technologyId}}"
+          },
+          "description": "Use após remover o relacionamento para verificar o 404 da relação inexistente."
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "description": "Executar somente no final dos testes e apenas com registros criados para teste.",
+      "item": [
+        {
+          "name": "DELETE /profiles/:profileId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/profiles/{{profileId}}",
+            "description": "Execute apenas depois dos testes de experiências e projetos que dependem deste perfil. O perfil de teste criado pelo POST será usado aqui."
+          }
+        }
+      ]
+    }
+  ]
+}
