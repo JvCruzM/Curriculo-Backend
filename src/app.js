@@ -19,6 +19,12 @@ app.get("/", (req, res) => {
     message: "API de Currículo funcionando!",
   });
 });
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "API de Currículo online.",
+  });
+});
 
 app.use("/profiles", profileRoutes);
 app.use("/academic-experiences", academicExperienceRoutes);
