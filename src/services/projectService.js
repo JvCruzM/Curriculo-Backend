@@ -1,4 +1,9 @@
-import { Project, Profile, Technology } from "../models/index.js";
+import {
+  Project,
+  Profile,
+  Technology,
+  ProjectTechnology,
+} from "../models/index.js";
 
 const projectInclude = [
   {
@@ -117,6 +122,19 @@ const addTechnologyToProject = async (projectId, technologyId) => {
     };
   }
 
+  const existingRelation = await ProjectTechnology.findOne({
+    where: {
+      projectId,
+      technologyId,
+    },
+  });
+
+  if (existingRelation) {
+    return {
+      error: "TECHNOLOGY_ALREADY_ASSOCIATED",
+    };
+  }
+
   await project.addTechnology(technology);
 
   return technology;
@@ -136,6 +154,19 @@ const removeTechnologyFromProject = async (projectId, technologyId) => {
   if (!technology) {
     return {
       error: "TECHNOLOGY_NOT_FOUND",
+    };
+  }
+
+  const existingRelation = await ProjectTechnology.findOne({
+    where: {
+      projectId,
+      technologyId,
+    },
+  });
+
+  if (!existingRelation) {
+    return {
+      error: "RELATION_NOT_FOUND",
     };
   }
 

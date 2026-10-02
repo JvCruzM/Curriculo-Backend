@@ -134,6 +134,12 @@ const addTechnologyToProject = async (req, res, next) => {
       });
     }
 
+    if (result?.error === "TECHNOLOGY_ALREADY_ASSOCIATED") {
+      return res.status(409).json({
+        error: "A tecnologia já está associada ao projeto.",
+      });
+    }
+
     return res.status(201).json({
       message: "Tecnologia associada ao projeto com sucesso.",
       technology: result,
@@ -161,6 +167,12 @@ const removeTechnologyFromProject = async (req, res, next) => {
     if (result?.error === "TECHNOLOGY_NOT_FOUND") {
       return res.status(404).json({
         error: "Tecnologia não encontrada.",
+      });
+    }
+
+    if (result?.error === "RELATION_NOT_FOUND") {
+      return res.status(404).json({
+        error: "A tecnologia não está associada ao projeto.",
       });
     }
 

@@ -10,8 +10,29 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === "SequelizeUniqueConstraintError") {
     return res.status(409).json({
-      error: "Já existe um registro com um valor único informado.",
+      error: "Registro duplicado.",
       details: error.errors.map((item) => item.message),
+    });
+  }
+
+  const databaseErrorCode = error.original?.code;
+
+  if (databaseErrorCode === "22P02") {
+    return res.status(400).json({
+      error: "ID informado possui formato inválido.",
+    });
+  }
+
+  if (databaseErrorCode === "23503") {
+    return res.status(400).json({
+      error:
+        "Não é possível realizar a operação porque o registro relacionado não existe.",
+    });
+  }
+
+  if (databaseErrorCode === "23505") {
+    return res.status(409).json({
+      error: "Já existe um registro com os valores informados.",
     });
   }
 
