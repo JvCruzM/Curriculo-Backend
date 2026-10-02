@@ -13,6 +13,7 @@ A API permite cadastrar e gerenciar informações de currículos, incluindo perf
 * PostgreSQL
 * Sequelize
 * NeonDB
+* Vercel
 
 ## Funcionalidades
 
@@ -29,6 +30,22 @@ Atualmente, a API possui:
 * Validação de registros relacionados
 * Tratamento de erros da API
 * Endpoint de verificação de funcionamento da aplicação
+* Deploy da API em ambiente de produção na Vercel
+
+## API publicada
+
+A API está disponível publicamente por meio da Vercel:
+
+```text
+https://curriculo-backend-wheat.vercel.app
+```
+
+Endpoints de verificação:
+
+```http
+GET /
+GET /health
+```
 
 ## Modelo de dados
 
@@ -45,9 +62,9 @@ O banco de dados é composto pelas seguintes entidades:
 
 ```text
 Profile
-  ├── 1:N ── AcademicExperience
-  ├── 1:N ── ProfessionalExperience
-  └── 1:N ── Project
+ ├── 1:N ── AcademicExperience
+ ├── 1:N ── ProfessionalExperience
+ └── 1:N ── Project
                   │
                   └── N:N ── Technology
 ```
@@ -140,7 +157,7 @@ npm run db:seed
 
 O seed inicial contém dados de **dois currículos**, utilizados para validar a estrutura e os relacionamentos da aplicação.
 
-## Executando o projeto
+## Executando o projeto localmente
 
 Para iniciar o servidor em ambiente de desenvolvimento:
 
@@ -202,6 +219,9 @@ GET    /projects/:projectId
 POST   /projects
 PUT    /projects/:projectId
 DELETE /projects/:projectId
+GET    /projects/:projectId/technologies
+POST   /projects/:projectId/technologies
+DELETE /projects/:projectId/technologies/:technologyId
 ```
 
 ### Technologies
@@ -214,12 +234,34 @@ PUT    /technologies/:technologyId
 DELETE /technologies/:technologyId
 ```
 
-### Relacionamento entre Projetos e Tecnologias
+## Relacionamento entre Projetos e Tecnologias
+
+O relacionamento N:N entre projetos e tecnologias utiliza os seguintes endpoints:
 
 ```http
 GET    /projects/:projectId/technologies
 POST   /projects/:projectId/technologies
 DELETE /projects/:projectId/technologies/:technologyId
+```
+
+## Postman
+
+A API possui uma collection do Postman com as requisições de teste dos recursos e relacionamentos da aplicação.
+
+Os arquivos estão disponíveis no repositório:
+
+```text
+Curriculo-Backend-Postman/
+├── Curriculo-Backend.postman_collection.json
+└── Curriculo-Backend-Local.postman_environment.json
+```
+
+A collection pode ser utilizada tanto para testes locais quanto para testes da API publicada, utilizando a variável `baseUrl`.
+
+Para utilizar a API publicada, configure:
+
+```text
+baseUrl = https://curriculo-backend-wheat.vercel.app
 ```
 
 ## Códigos HTTP utilizados
