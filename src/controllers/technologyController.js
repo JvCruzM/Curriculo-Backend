@@ -71,6 +71,13 @@ const deleteTechnology = async (req, res, next) => {
       });
     }
 
+    if (technology?.error === "TECHNOLOGY_IN_USE") {
+      return res.status(409).json({
+        error:
+          "Não é possível excluir a tecnologia porque ela está associada a um ou mais projetos.",
+      });
+    }
+
     return res.status(200).json({
       message: "Tecnologia excluída com sucesso.",
     });

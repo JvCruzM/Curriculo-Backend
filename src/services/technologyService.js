@@ -1,4 +1,4 @@
-import Technology from "../models/technology.js";
+import { Technology, ProjectTechnology } from "../models/index.js";
 
 const getAllTechnologies = async () => {
   return await Technology.findAll({
@@ -29,6 +29,18 @@ const deleteTechnology = async (id) => {
 
   if (!technology) {
     return null;
+  }
+
+  const projectRelations = await ProjectTechnology.count({
+    where: {
+      technologyId: id,
+    },
+  });
+
+  if (projectRelations > 0) {
+    return {
+      error: "TECHNOLOGY_IN_USE",
+    };
   }
 
   await technology.destroy();
