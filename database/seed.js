@@ -28,8 +28,7 @@ const profilesData = [
         degree: "Técnico",
         startDate: "2020-02-01",
         endDate: "2022-12-01",
-        description:
-          "Curso médio/técnico voltado para Redes de Computadores.",
+        description: "Curso médio/técnico voltado para Redes de Computadores.",
       },
       {
         institution: "Universidade Católica de Pernambuco (UNICAP)",
@@ -159,12 +158,7 @@ const profilesData = [
         projectUrl: "https://taskflow-demo.vercel.app/",
         startDate: "2025-01-01",
         endDate: "2025-03-01",
-        technologies: [
-          "JavaScript",
-          "Node.js",
-          "Express",
-          "PostgreSQL",
-        ],
+        technologies: ["JavaScript", "Node.js", "Express", "PostgreSQL"],
       },
       {
         name: "FinanceTrack",
@@ -174,13 +168,7 @@ const profilesData = [
         projectUrl: null,
         startDate: "2025-05-01",
         endDate: "2025-07-01",
-        technologies: [
-          "React",
-          "Node.js",
-          "Express",
-          "PostgreSQL",
-          "Docker",
-        ],
+        technologies: ["React", "Node.js", "Express", "PostgreSQL", "Docker"],
       },
     ],
   },

@@ -60,10 +60,7 @@ const updateProfile = async (req, res, next) => {
   try {
     const { profileId } = req.params;
 
-    const profile = await profileService.updateProfile(
-      profileId,
-      req.body,
-    );
+    const profile = await profileService.updateProfile(profileId, req.body);
 
     if (!profile) {
       return res.status(404).json({
